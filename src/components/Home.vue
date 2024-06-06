@@ -36,22 +36,18 @@ const submitBtn = () => {
             amount : itemAmount.value
         }) 
         localStorage.setItem("addItem", JSON.stringify(addItem))
+        if(itemAmount.value < 0){
+            showToster('Negative item add', 'error')
+        }else{
+            showToster('add item', 'info')
+        }
         itemName.value = ''
         itemAmount.value = ''
-        
-    }
-    
-    
-
-    // toast.success('Success to add item', {
-    //     autoClose: 1000,
-    // })
-    
+    } 
 }
 
 
 const positiveNumber = computed (()=>{
-    
     let total = 0
     for(let item of addItem){
         if(item.amount > 0){
@@ -71,37 +67,24 @@ const negativeNumber = computed(()=>{
     return total
 })
 
-watch (negativeNumber, ()=>{
-    
-        showToster('Negative value', 'error')
-    
-})
+const removeItem = (item) => {
+    let index = addItem.indexOf(item)
+    const remove = addItem.splice(index, 1)
+    localStorage.setItem("addItem", JSON.stringify(addItem))
+    showToster('Remove item', 'error')
+    return remove
+}
+
 
 const totalBalnce = computed(() => {
    return balance.value + positiveNumber.value + negativeNumber.value
 })
 
-const removeItem = (item) => {
-    let i = addItem.indexOf(item)
-    const remove = addItem.splice(i, 1)
-    localStorage.setItem("addItem", JSON.stringify(addItem))
-    showToster('Remove item', 'error')
-    // toast.error('Remove item', {
-    //     autoClose: 1000,
-    // })
-
-    return remove
-}
-
-// watch (addItem, (value) => {
-//     localStorage.setItem('additem', JSON.stringify(value))
-// })
 
 
 </script>
 
 <template>
-    <!-- <p>{{ addItem }}</p> -->
 
     <div class="w-full h-screen bg-gray-100 pt-2">
         <div class="w-[500px] m-auto bg-white py-3 px-5">
