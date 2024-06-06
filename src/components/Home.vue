@@ -10,44 +10,32 @@ const itemName = ref('')
 const itemAmount = ref()
 const balance = ref(100)
 
-// toast("Track Your Many!", {
-//     "theme": "dark",
-//   "type": "warning",
-//   "autoClose": 1000,
-//   "dangerouslyHTMLString": true
-// })
-
-
-const showToster = (message, type='info') => {
+const showToster = (message, type) => {
     toast(message,{
         type: type,
         autoClose: 1000
     })
 }
 
-
 const submitBtn = () => {
-   if(itemName.value === '' || itemAmount.value === ''){
-    console.error(`empty field`)
-   }else{
-        addItem.push({
-            id: addItem.length + 1 ,
-            name : itemName.value,
-            amount : itemAmount.value
-        }) 
-        localStorage.setItem("addItem", JSON.stringify(addItem))
-        if(itemAmount.value < 0){
-            showToster('Negative item add', 'error')
-        }else{
-            showToster('add item', 'info')
-        }
-        itemName.value = ''
-        itemAmount.value = ''
-    } 
+    addItem.push({
+        id: addItem.length + 1 ,
+        name : itemName.value,
+        amount : itemAmount.value
+    }) 
+    localStorage.setItem("addItem", JSON.stringify(addItem))
+    // negative & positive item add toster //
+    if(itemAmount.value < 0){
+        showToster('Negative item add', 'error')
+    }else{
+        showToster('add item', 'info')
+    }
+    itemName.value = ''
+    itemAmount.value = ''
+    
 }
 
-
-const positiveNumber = computed (()=>{
+const income = computed (()=>{
     let total = 0
     for(let item of addItem){
         if(item.amount > 0){
@@ -57,7 +45,7 @@ const positiveNumber = computed (()=>{
     return total
 })
 
-const negativeNumber = computed(()=>{
+const expense = computed(()=>{
     let total = 0 
     for(let item of addItem){
         if(item.amount<0){
@@ -75,9 +63,8 @@ const removeItem = (item) => {
     return remove
 }
 
-
 const totalBalnce = computed(() => {
-   return balance.value + positiveNumber.value + negativeNumber.value
+   return balance.value + income.value + expense.value
 })
 
 
@@ -86,19 +73,19 @@ const totalBalnce = computed(() => {
 
 <template>
 
-    <div class="w-full h-screen bg-gray-100 pt-2">
-        <div class="w-[500px] m-auto bg-white py-3 px-5">
+    <div class="w-full lg:h-screen bg-gray-100 lg:pt-2">
+        <div class="w-full lg:w-[400px] m-auto bg-white py-3 px-5 ">
             <h4 class="text-base font-medium text-gray-800 ">Expense Tracker</h4>
             <h6 class="text-sm font-normal text-gray-800 mt-2">YOUR BALANCE</h6>
             <h3 class="text-base font-medium text-gray-800 ">$ {{ totalBalnce }}</h3>
-            <div class="w-full grid grid-cols-2 gap-3 mt-3 ">
-                <div class="text-center shadow py-3 border rounded">
+            <div class="w-full grid grid-cols-2 gap-3 mt-1 ">
+                <div class="text-center shadow py-2 border rounded">
                     <p class="capitalize text-base font-normal text-gray-800">income</p>
-                    <span class="text-green-500 text-base font-medium block pt-1">$ {{ positiveNumber }}</span>
+                    <span class="text-green-500 text-base font-medium block pt-1">$ {{ income }}</span>
                 </div>
-                <div class="text-center shadow py-3 border rounded">
+                <div class="text-center shadow py-2 border rounded">
                     <p class="capitalize text-base font-normal text-gray-800">expense</p>
-                    <span class="text-red-500 text-base font-medium block pt-1">$ {{ negativeNumber }} </span>
+                    <span class="text-red-500 text-base font-medium block pt-1">$ {{ expense }} </span>
                 </div>
             </div>
             <p class="mt-5 text-gray-800 text-sm font-medium border-b pb-1">History</p>
