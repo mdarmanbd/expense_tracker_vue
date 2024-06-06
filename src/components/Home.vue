@@ -1,5 +1,7 @@
 <script setup>
 import { ref, reactive, watch, computed } from 'vue';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 
 const addItemParse = JSON.parse(localStorage.getItem("addItem")) || []
@@ -7,6 +9,21 @@ const addItem = reactive(addItemParse);
 const itemName = ref('')
 const itemAmount = ref()
 const balance = ref(100)
+
+// toast("Track Your Many!", {
+//     "theme": "dark",
+//   "type": "warning",
+//   "autoClose": 1000,
+//   "dangerouslyHTMLString": true
+// })
+
+
+const showToster = (message, type='info') => {
+    toast(message,{
+        type: type,
+        autoClose: 1000
+    })
+}
 
 
 const submitBtn = () => {
@@ -21,12 +38,20 @@ const submitBtn = () => {
         localStorage.setItem("addItem", JSON.stringify(addItem))
         itemName.value = ''
         itemAmount.value = ''
+        
     }
+    
+    
+
+    // toast.success('Success to add item', {
+    //     autoClose: 1000,
+    // })
     
 }
 
 
 const positiveNumber = computed (()=>{
+    
     let total = 0
     for(let item of addItem){
         if(item.amount > 0){
@@ -46,15 +71,25 @@ const negativeNumber = computed(()=>{
     return total
 })
 
+watch (negativeNumber, ()=>{
+    
+        showToster('Negative value', 'error')
+    
+})
+
 const totalBalnce = computed(() => {
    return balance.value + positiveNumber.value + negativeNumber.value
 })
 
 const removeItem = (item) => {
     let i = addItem.indexOf(item)
-    
     const remove = addItem.splice(i, 1)
     localStorage.setItem("addItem", JSON.stringify(addItem))
+    showToster('Remove item', 'error')
+    // toast.error('Remove item', {
+    //     autoClose: 1000,
+    // })
+
     return remove
 }
 
