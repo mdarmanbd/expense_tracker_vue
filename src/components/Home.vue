@@ -8,7 +8,7 @@ const addItemParse = JSON.parse(localStorage.getItem("addItem")) || []
 const addItem = reactive(addItemParse);
 const itemName = ref('')
 const itemAmount = ref()
-const balance = ref(100)
+const balance = ref(0)
 
 const showToster = (message, type) => {
     toast(message,{
@@ -89,7 +89,7 @@ const totalBalnce = computed(() => {
                 </div>
             </div>
             <p class="mt-5 text-gray-800 text-sm font-medium border-b pb-1">History</p>
-            <div class="h-[110px] overflow-y-auto">
+            <div class="h-[200px] lg:h-[110px] overflow-y-auto">
                 <div v-for="(item, index) in addItem" :key="index">
                     <div class="mt-2 ml-5 relative group mb-1 flex items-center py-1 px-3 bg-gray-100 border-r-4 " :class="item.amount > 0 ? 'bg-green-200 border-r-green-500' : 'bg-red-200 border-r-red-500'">
                         <img @click="removeItem(item)" class="absolute z-0 invisible group-hover:visible group-hover:z-10 hover:bg-red-100 bg-red-50 -left-5 top-0 py-1 cursor-pointer" src="../svg/cross.svg">
